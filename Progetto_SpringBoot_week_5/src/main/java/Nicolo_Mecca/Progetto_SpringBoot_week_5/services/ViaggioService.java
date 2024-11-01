@@ -77,8 +77,8 @@ public class ViaggioService {
     }
 
     public Viaggio updateStato(Long id, String nuovoStato) {
-        if (!nuovoStato.equals("IN_PROGRAMMA") && !nuovoStato.equals("COMPLETATO")) {
-            throw new BadRequestException("Stato non valido. Stati ammessi: IN_PROGRAMMA, COMPLETATO");
+        if (!nuovoStato.equals("in programma") && !nuovoStato.equals("completato")) {
+            throw new BadRequestException("Stato non valido. Stati ammessi: in programma, completato");
         }
 
         Viaggio found = this.findById(id);

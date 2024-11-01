@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -47,11 +48,11 @@ public class ViaggioController {
         return this.viaggioService.findById(viaggioId);
     }
 
-    // 4. PUT http://localhost:3001/viaggi/{viaggioId}/stato
     @PutMapping("/{viaggioId}/stato")
     public Viaggio updateStato(
             @PathVariable Long viaggioId,
-            @RequestBody String nuovoStato) {
+            @RequestBody Map<String, String> requestBody) {
+        String nuovoStato = requestBody.get("stato");
         return this.viaggioService.updateStato(viaggioId, nuovoStato);
     }
 

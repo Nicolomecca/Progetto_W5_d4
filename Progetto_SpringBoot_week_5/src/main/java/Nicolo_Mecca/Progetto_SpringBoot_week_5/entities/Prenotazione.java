@@ -23,6 +23,10 @@ public class Prenotazione {
     @JoinColumn(name = "viaggio_id")
     private Viaggio viaggio;
 
+    @ManyToOne
+    @JoinColumn(name = "dipendente_id")
+    private Dipendente dipendente;
+
     public Prenotazione(LocalDate data, String note, Viaggio viaggio) {
         this.data = data;
         this.note = note;

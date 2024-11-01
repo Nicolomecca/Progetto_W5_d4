@@ -17,13 +17,15 @@ public class Prenotazione {
     @Setter(AccessLevel.NONE)
     private Long id;
     private LocalDate data;
+    private String note;
 
     @OneToOne
     @JoinColumn(name = "viaggio_id")
     private Viaggio viaggio;
 
-    public Prenotazione(LocalDate data, Viaggio viaggio) {
+    public Prenotazione(LocalDate data, String note, Viaggio viaggio) {
         this.data = data;
+        this.note = note;
         this.viaggio = viaggio;
     }
 }

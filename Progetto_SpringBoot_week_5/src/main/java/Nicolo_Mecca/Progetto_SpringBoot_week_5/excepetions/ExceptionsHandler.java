@@ -1,7 +1,6 @@
 package Nicolo_Mecca.Progetto_SpringBoot_week_5.excepetions;
 
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.payloads.ErrorsResponseDTO;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,9 +17,9 @@ public class ExceptionsHandler {
         return new ErrorsResponseDTO(ex.getMessage(), LocalDateTime.now());
     }
 
-    @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND) // 404
-    public ErrorsResponseDTO handleNotFound(ChangeSetPersister.NotFoundException ex) {
+    public ErrorsResponseDTO handleNotFound(NotFoundException ex) {
         return new ErrorsResponseDTO(ex.getMessage(), LocalDateTime.now());
     }
 

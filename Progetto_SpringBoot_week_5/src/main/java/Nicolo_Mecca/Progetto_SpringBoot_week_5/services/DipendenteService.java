@@ -2,6 +2,7 @@ package Nicolo_Mecca.Progetto_SpringBoot_week_5.services;
 
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.entities.Dipendente;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.excepetions.BadRequestException;
+import Nicolo_Mecca.Progetto_SpringBoot_week_5.excepetions.NotFoundException;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.payloads.NewDipendenteDTO;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.repositories.DipendenteRepository;
 import com.cloudinary.Cloudinary;
@@ -27,7 +28,7 @@ public class DipendenteService {
 
     public Dipendente findById(Long id) {
         return dipendenteRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Dipendente con id " + id + " non trovato"));
+                .orElseThrow(() -> new NotFoundException("Dipendente con id " + id + " non trovato"));
     }
 
     public Dipendente save(NewDipendenteDTO body) {
@@ -93,4 +94,5 @@ public class DipendenteService {
             throw new BadRequestException("Errore durante l'upload dell'immagine!");
         }
     }
+
 }

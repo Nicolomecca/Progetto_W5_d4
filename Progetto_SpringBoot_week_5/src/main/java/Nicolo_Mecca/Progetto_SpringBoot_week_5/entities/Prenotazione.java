@@ -1,5 +1,6 @@
 package Nicolo_Mecca.Progetto_SpringBoot_week_5.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,7 @@ public class Prenotazione {
 
     @ManyToOne
     @JoinColumn(name = "dipendente_id")
+    @JsonBackReference
     private Dipendente dipendente;
 
     public Prenotazione(LocalDate data, String note, Viaggio viaggio) {

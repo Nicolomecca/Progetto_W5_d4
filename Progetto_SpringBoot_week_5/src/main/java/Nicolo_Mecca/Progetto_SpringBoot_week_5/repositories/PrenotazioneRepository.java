@@ -17,8 +17,6 @@ public interface PrenotazioneRepository extends JpaRepository<Prenotazione, Long
     // Metodi aggiuntivi utili
     List<Prenotazione> findByData(LocalDate data);
 
-    List<Prenotazione> findByDataBetween(LocalDate startDate, LocalDate endDate);
-
     boolean existsByViaggioIdAndData(Long viaggioId, LocalDate data);
 
 }

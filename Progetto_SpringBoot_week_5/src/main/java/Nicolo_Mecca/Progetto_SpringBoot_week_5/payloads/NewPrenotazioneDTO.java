@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record NewPrenotazioneDTO(
+
         @NotNull(message = "La data è obbligatoria")
         @Future(message = "La data deve essere futura")
         LocalDate data,
@@ -20,6 +21,8 @@ public record NewPrenotazioneDTO(
 
         @NotNull(message = "L'ID del dipendente è obbligatorio")
         Long dipendenteId
+        
 ) {
+
 }
 

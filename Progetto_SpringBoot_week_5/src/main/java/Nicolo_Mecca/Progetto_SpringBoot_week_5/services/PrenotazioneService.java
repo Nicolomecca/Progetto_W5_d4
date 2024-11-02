@@ -4,6 +4,7 @@ import Nicolo_Mecca.Progetto_SpringBoot_week_5.entities.Dipendente;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.entities.Prenotazione;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.entities.Viaggio;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.excepetions.BadRequestException;
+import Nicolo_Mecca.Progetto_SpringBoot_week_5.excepetions.NotFoundException;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.payloads.NewPrenotazioneDTO;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.repositories.DipendenteRepository;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.repositories.PrenotazioneRepository;
@@ -14,6 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class PrenotazioneService {
@@ -27,7 +31,7 @@ public class PrenotazioneService {
 
     public Prenotazione findById(Long id) {
         return prenotazioneRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Prenotazione con id " + id + " non trovata"));
+                .orElseThrow(() -> new NotFoundException("Prenotazione con id " + id + " non trovata"));
     }
 
     public Page<Prenotazione> findAll(int page, int size, String sortBy) {
@@ -69,7 +73,6 @@ public class PrenotazioneService {
         Prenotazione prenotazione = new Prenotazione(body.data(), body.note(), viaggio);
         prenotazione = prenotazioneRepository.save(prenotazione);
 
-        dipendente.getPrenotazioni().add(prenotazione);
         dipendenteRepository.save(dipendente);
 
         return prenotazione;
@@ -80,5 +83,23 @@ public class PrenotazioneService {
         prenotazioneRepository.delete(prenotazione);
     }
 
+    public Page<Prenotazione> getAllPrenotazioni(Pageable pageable) {
+        return prenotazioneRepository.findAll(pageable);
+    }
 
+    public Page<Prenotazione> getPrenotazioniByDipendente(Long dipendenteId, Pageable pageable) {
+        return prenotazioneRepository.findByDipendenteId(dipendenteId, pageable);
+    }
+
+    public List<Prenotazione> getPrenotazioniByData(LocalDate data) {
+        return prenotazioneRepository.findByData(data);
+    }
+
+
+    public boolean existsPrenotazioneForViaggioAndData(Long viaggioId, LocalDate data) {
+        return prenotazioneRepository.existsByViaggioIdAndData(viaggioId, data);
+    }
 }
+
+
+

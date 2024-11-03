@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface PrenotazioneRepository extends JpaRepository<Prenotazione, Long> {
     // Verifica se esiste una prenotazione per un dipendente in una data specifica del viaggio
@@ -22,6 +21,5 @@ public interface PrenotazioneRepository extends JpaRepository<Prenotazione, Long
     // Verifica se esiste una prenotazione per un viaggio in una data specifica del viaggio
     boolean existsByViaggioIdAndDataViaggio(Long viaggioId, LocalDate dataViaggio);
 
-    Optional<Prenotazione> findByViaggioId(Long viaggioId);
 
 }

@@ -1,10 +1,10 @@
 package Nicolo_Mecca.Progetto_SpringBoot_week_5.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "prenotazioni")
@@ -13,11 +13,16 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class Prenotazione {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private Long id;
-    private LocalDate data;
+
+    private LocalDate dataViaggio;
+
+    private LocalDateTime dataPrenotazione;
+
     private String note;
 
     @OneToOne
@@ -26,11 +31,11 @@ public class Prenotazione {
 
     @ManyToOne
     @JoinColumn(name = "dipendente_id")
-    @JsonBackReference
     private Dipendente dipendente;
 
-    public Prenotazione(LocalDate data, String note, Viaggio viaggio) {
-        this.data = data;
+    public Prenotazione(LocalDate dataViaggio, String note, Viaggio viaggio) {
+        this.dataViaggio = dataViaggio;
+        this.dataPrenotazione = LocalDateTime.now();
         this.note = note;
         this.viaggio = viaggio;
     }

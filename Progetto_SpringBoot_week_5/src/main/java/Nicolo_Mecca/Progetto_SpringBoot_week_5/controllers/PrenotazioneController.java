@@ -2,7 +2,6 @@ package Nicolo_Mecca.Progetto_SpringBoot_week_5.controllers;
 
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.entities.Prenotazione;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.payloads.NewPrenotazioneDTO;
-import Nicolo_Mecca.Progetto_SpringBoot_week_5.payloads.PrenotazioneResponseDTO;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.services.PrenotazioneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/prenotazioni")
@@ -23,9 +21,8 @@ public class PrenotazioneController {
 
     // 1. GET http://localhost:3001/prenotazioni
     @GetMapping
-    public Page<PrenotazioneResponseDTO> getAllPrenotazioni(Pageable pageable) {
-        Page<Prenotazione> prenotazioni = prenotazioneService.getAllPrenotazioni(pageable);
-        return prenotazioni.map(PrenotazioneResponseDTO::new);
+    public Page<Prenotazione> getAllPrenotazioni(Pageable pageable) {
+        return prenotazioneService.getAllPrenotazioni(pageable);
     }
 
     // 2. POST http://localhost:3001/prenotazioni
@@ -49,25 +46,21 @@ public class PrenotazioneController {
     }
 
     @GetMapping("/dipendente/{dipendenteId}")
-    public Page<PrenotazioneResponseDTO> getPrenotazioniByDipendente(
+    public Page<Prenotazione> getPrenotazioniByDipendente(
             @PathVariable Long dipendenteId,
             Pageable pageable) {
-        Page<Prenotazione> prenotazioni = prenotazioneService.getPrenotazioniByDipendente(dipendenteId, pageable);
-        return prenotazioni.map(PrenotazioneResponseDTO::new);
+        return prenotazioneService.getPrenotazioniByDipendente(dipendenteId, pageable);
     }
 
-    @GetMapping("/data/{data}")
-    public List<PrenotazioneResponseDTO> getPrenotazioniByData(@PathVariable LocalDate data) {
-        List<Prenotazione> prenotazioni = prenotazioneService.getPrenotazioniByData(data);
-        return prenotazioni.stream().map(PrenotazioneResponseDTO::new).collect(Collectors.toList());
+    @GetMapping("/data/{dataViaggio}")
+    public List<Prenotazione> getPrenotazioniByData(@PathVariable LocalDate dataViaggio) {
+        return prenotazioneService.getPrenotazioniByData(dataViaggio);
     }
-    
 
     @GetMapping("/exists")
     public boolean existsPrenotazioneForViaggioAndData(
             @RequestParam Long viaggioId,
-            @RequestParam LocalDate data) {
-        return prenotazioneService.existsPrenotazioneForViaggioAndData(viaggioId, data);
+            @RequestParam LocalDate dataViaggio) {
+        return prenotazioneService.existsPrenotazioneForViaggioAndData(viaggioId, dataViaggio);
     }
-
 }

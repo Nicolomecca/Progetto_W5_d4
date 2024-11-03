@@ -63,6 +63,7 @@ public class DipendenteController {
         return this.dipendenteService.findByIdAndUpdate(dipendenteId, body);
     }
 
+
     // 5. DELETE http://localhost:3001/dipendenti/{dipendenteId}
     @DeleteMapping("/{dipendenteId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

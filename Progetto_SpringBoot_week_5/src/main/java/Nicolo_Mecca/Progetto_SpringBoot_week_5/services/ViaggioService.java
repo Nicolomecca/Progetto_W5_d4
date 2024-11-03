@@ -1,9 +1,12 @@
 package Nicolo_Mecca.Progetto_SpringBoot_week_5.services;
 
+import Nicolo_Mecca.Progetto_SpringBoot_week_5.entities.Prenotazione;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.entities.Viaggio;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.excepetions.BadRequestException;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.excepetions.NotFoundException;
+import Nicolo_Mecca.Progetto_SpringBoot_week_5.payloads.NewPrenotazioneDTO;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.payloads.NewViaggioDTO;
+import Nicolo_Mecca.Progetto_SpringBoot_week_5.payloads.ViaggioWithDipendenteDTO;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.repositories.DipendenteRepository;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.repositories.PrenotazioneRepository;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.repositories.ViaggioRepository;
@@ -24,6 +27,8 @@ public class ViaggioService {
 
     @Autowired
     private PrenotazioneRepository prenotazioneRepository;
+    @Autowired
+    private PrenotazioneService prenotazioneService;
 
     public Viaggio findById(Long id) {
         return viaggioRepository.findById(id)
@@ -86,4 +91,14 @@ public class ViaggioService {
         return viaggioRepository.save(found);
     }
 
+    public ViaggioWithDipendenteDTO assegnaDipendenteAViaggio(Long viaggioId, Long dipendenteId, NewPrenotazioneDTO body) {
+        Prenotazione prenotazione = prenotazioneService.save(body);
+        Viaggio viaggio = viaggioRepository.findById(viaggioId)
+                .orElseThrow(() -> new NotFoundException("Viaggio non trovato"));
+        return ViaggioWithDipendenteDTO.fromViaggio(viaggio, dipendenteId);
+    }
+
+
 }
+
+

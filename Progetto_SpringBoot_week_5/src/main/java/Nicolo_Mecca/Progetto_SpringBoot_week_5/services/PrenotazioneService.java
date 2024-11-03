@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -51,16 +52,15 @@ public class PrenotazioneService {
 
         // Controllo prenotazioni duplicate
         boolean prenotazioneEsistente = prenotazioneRepository
-                .existsByDipendenteIdAndData(dipendente.getId(), body.data());
-
+                .existsByDipendenteIdAndDataViaggio(dipendente.getId(), body.dataViaggio());
         if (prenotazioneEsistente) {
             throw new BadRequestException("Il dipendente ha già una prenotazione per questa data");
         }
 
         // Controllo date valide
-        if (body.data().isBefore(viaggio.getDataInizio()) || body.data().isAfter(viaggio.getDataFine())) {
+        if (body.dataViaggio().isBefore(viaggio.getDataInizio()) || body.dataViaggio().isAfter(viaggio.getDataFine())) {
             throw new BadRequestException(
-                    "La data della prenotazione deve essere compresa tra " +
+                    "La data del viaggio deve essere compresa tra " +
                             viaggio.getDataInizio() + " e " + viaggio.getDataFine()
             );
         }
@@ -70,11 +70,14 @@ public class PrenotazioneService {
             throw new BadRequestException("Non è possibile prenotare un viaggio già completato");
         }
 
-        Prenotazione prenotazione = new Prenotazione(body.data(), body.note(), viaggio);
+        Prenotazione prenotazione = new Prenotazione();
+        prenotazione.setDataViaggio(body.dataViaggio());
+        prenotazione.setDataPrenotazione(LocalDateTime.now());
+        prenotazione.setNote(body.note());
+        prenotazione.setViaggio(viaggio);
+        prenotazione.setDipendente(dipendente);
+
         prenotazione = prenotazioneRepository.save(prenotazione);
-
-        dipendenteRepository.save(dipendente);
-
         return prenotazione;
     }
 
@@ -91,13 +94,13 @@ public class PrenotazioneService {
         return prenotazioneRepository.findByDipendenteId(dipendenteId, pageable);
     }
 
-    public List<Prenotazione> getPrenotazioniByData(LocalDate data) {
-        return prenotazioneRepository.findByData(data);
+    public List<Prenotazione> getPrenotazioniByData(LocalDate dataViaggio) {
+        return prenotazioneRepository.findByDataViaggio(dataViaggio);
     }
 
 
-    public boolean existsPrenotazioneForViaggioAndData(Long viaggioId, LocalDate data) {
-        return prenotazioneRepository.existsByViaggioIdAndData(viaggioId, data);
+    public boolean existsPrenotazioneForViaggioAndData(Long viaggioId, LocalDate dataViaggio) {
+        return prenotazioneRepository.existsByViaggioIdAndDataViaggio(viaggioId, dataViaggio);
     }
 }
 

@@ -1,8 +1,13 @@
 package Nicolo_Mecca.Progetto_SpringBoot_week_5.controllers;
 
+import Nicolo_Mecca.Progetto_SpringBoot_week_5.entities.Prenotazione;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.entities.Viaggio;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.excepetions.BadRequestException;
+import Nicolo_Mecca.Progetto_SpringBoot_week_5.payloads.AssegnazioneViaggioDTO;
+import Nicolo_Mecca.Progetto_SpringBoot_week_5.payloads.NewPrenotazioneDTO;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.payloads.NewViaggioDTO;
+import Nicolo_Mecca.Progetto_SpringBoot_week_5.payloads.ViaggioWithDipendenteDTO;
+import Nicolo_Mecca.Progetto_SpringBoot_week_5.services.PrenotazioneService;
 import Nicolo_Mecca.Progetto_SpringBoot_week_5.services.ViaggioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +24,8 @@ import java.util.stream.Collectors;
 public class ViaggioController {
     @Autowired
     private ViaggioService viaggioService;
+    @Autowired
+    private PrenotazioneService prenotazioneService;
 
     // 1. GET http://localhost:3001/viaggi
     @GetMapping
@@ -54,6 +61,22 @@ public class ViaggioController {
             @RequestBody Map<String, String> requestBody) {
         String nuovoStato = requestBody.get("stato");
         return this.viaggioService.updateStato(viaggioId, nuovoStato);
+    }
+
+    @PostMapping("/assegna")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ViaggioWithDipendenteDTO assegnaDipententeAViaggio(
+            @RequestBody @Validated AssegnazioneViaggioDTO body) {
+
+        NewPrenotazioneDTO prenotazioneDTO = new NewPrenotazioneDTO(
+                body.dataViaggio(),
+                body.note(),
+                body.viaggioId(),
+                body.dipendenteId()
+        );
+
+        Prenotazione prenotazione = prenotazioneService.save(prenotazioneDTO);
+        return ViaggioWithDipendenteDTO.fromViaggio(prenotazione.getViaggio(), body.dipendenteId());
     }
 
     // 5. DELETE http://localhost:3001/viaggi/{viaggioId}

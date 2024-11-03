@@ -42,22 +42,18 @@ public class PrenotazioneService {
     }
 
     public Prenotazione save(NewPrenotazioneDTO body) {
-        // Verifico esistenza del viaggio
         Viaggio viaggio = viaggioRepository.findById(body.viaggioId())
                 .orElseThrow(() -> new BadRequestException("Viaggio con id " + body.viaggioId() + " non trovato"));
 
-        // Verifico esistenza del dipendente
         Dipendente dipendente = dipendenteRepository.findById(body.dipendenteId())
                 .orElseThrow(() -> new BadRequestException("Dipendente con id " + body.dipendenteId() + " non trovato"));
 
-        // Controllo prenotazioni duplicate
         boolean prenotazioneEsistente = prenotazioneRepository
                 .existsByDipendenteIdAndDataViaggio(dipendente.getId(), body.dataViaggio());
         if (prenotazioneEsistente) {
             throw new BadRequestException("Il dipendente ha già una prenotazione per questa data");
         }
 
-        // Controllo date valide
         if (body.dataViaggio().isBefore(viaggio.getDataInizio()) || body.dataViaggio().isAfter(viaggio.getDataFine())) {
             throw new BadRequestException(
                     "La data del viaggio deve essere compresa tra " +
@@ -65,7 +61,6 @@ public class PrenotazioneService {
             );
         }
 
-        // Controllo stato viaggio
         if ("completato".equals(viaggio.getStato())) {
             throw new BadRequestException("Non è possibile prenotare un viaggio già completato");
         }
